@@ -35,6 +35,7 @@ import java.util.*
 
 class FormEntry : AppCompatActivity() {
 
+    // Deklarasi variabel, konstanta, dan objek yang digunakan dalam kelas
     companion object {
         const val EXTRA_NOTE = "extra_note"
         const val EXTRA_POSITION = "extra_position"
@@ -51,6 +52,7 @@ class FormEntry : AppCompatActivity() {
         private const val REQUEST_CODE_MAPS = 1001
     }
 
+    // Deklarasi variabel dan objek yang akan digunakan
     private var isEdit = false
     private var datapemilih: DataPemilih? = null
     private lateinit var formEntryViewModel: FormEntryViewModel
@@ -60,14 +62,15 @@ class FormEntry : AppCompatActivity() {
 
     private lateinit var selectedDate: String
 
+    // Fungsi yang dipanggil ketika Activity dibuat
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        // Inisialisasi view binding
         _activityFormEntryBinding = ActivityFormEntryBinding.inflate(layoutInflater)
         setContentView(binding?.root)
-
+        // Inisialisasi ViewModel
         formEntryViewModel = obtainViewModel(this@FormEntry)
-
+        // Pengecekan dan pengaturan mode Edit atau Tambah
         datapemilih = intent.getParcelableExtra(EXTRA_NOTE)
         if (datapemilih != null) {
             isEdit = true
@@ -75,12 +78,15 @@ class FormEntry : AppCompatActivity() {
             datapemilih = DataPemilih()
         }
 
+        // Set up ActionBar dan judul
         val actionBarTitle: String
         val btnTitle: String
 
         selectedDate = binding?.editTextTanggal?.text.toString()
 
+        // Mengatur UI berdasarkan mode Edit atau Tambah
         if (isEdit) {
+            // Konfigurasi UI untuk mode Edit
             actionBarTitle = "Ubah"
             btnTitle = "Update"
             if (datapemilih != null) {
@@ -113,17 +119,21 @@ class FormEntry : AppCompatActivity() {
                 }
             }
         } else {
+            // Konfigurasi UI untuk mode Tambah
             actionBarTitle = "Tambah"
             btnTitle = "Submit"
         }
 
+        // Set up ActionBar
         supportActionBar?.title = actionBarTitle
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        // Event listener untuk widget pada UI
         binding?.buttonTanggal?.setOnClickListener {
             showDatePicker()
         }
 
+        // Permintaan permission untuk akses kamera
         if (!allPermissionsGranted()) {
             ActivityCompat.requestPermissions(
                 this,
@@ -132,15 +142,17 @@ class FormEntry : AppCompatActivity() {
             )
         }
 
+        // Event listener untuk tombol kamera dan galeri
         binding?.btnCamera?.setOnClickListener { startCameraX() }
-
         binding?.btnGallery?.setOnClickListener { startGallery() }
 
+        // Event listener untuk tombol cek lokasi
         binding?.btnCekLokasi?.setOnClickListener {
             val intent = Intent(this, MapsActivity::class.java)
             startActivityForResult(intent, REQUEST_CODE_MAPS) // Menggunakan requestCode yang telah didefinisikan
         }
 
+        // Event listener untuk tombol submit
         binding?.btnSubmit?.text = btnTitle
 
         binding?.btnSubmit?.setOnClickListener {
@@ -228,6 +240,7 @@ class FormEntry : AppCompatActivity() {
 
     }
 
+    // Fungsi untuk menampilkan DatePicker
     private fun showDatePicker() {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
@@ -245,8 +258,10 @@ class FormEntry : AppCompatActivity() {
         datePickerDialog.show()
     }
 
+    // Fungsi untuk menangani hasil dari Activity lain
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        // Implementasi penanganan hasil Activity
         if (requestCode == REQUEST_CODE_MAPS && resultCode == RESULT_OK && data != null) {
             val latitude = data.getDoubleExtra("latitude", 0.0)
             val longitude = data.getDoubleExtra("longitude", 0.0)
@@ -259,18 +274,23 @@ class FormEntry : AppCompatActivity() {
         }
     }
 
+    // Fungsi untuk menampilkan Toast
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
+    // Fungsi untuk menampilkan menu opsi
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Implementasi menu
         if (isEdit) {
             menuInflater.inflate(R.menu.menu_form, menu)
         }
         return super.onCreateOptionsMenu(menu)
     }
 
+    // Fungsi untuk menangani item menu yang dipilih
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Implementasi penanganan item menu
         when (item.itemId) {
             R.id.action_delete -> showAlertDialog(ALERT_DIALOG_DELETE)
             android.R.id.home -> showAlertDialog(ALERT_DIALOG_CLOSE)
@@ -282,11 +302,7 @@ class FormEntry : AppCompatActivity() {
         showAlertDialog(ALERT_DIALOG_CLOSE)
     }
 
-    /*
-    Konfirmasi dialog sebelum proses batal atau hapus
-    close = 10
-    delete = 20
-     */
+    // Fungsi untuk menampilkan dialog konfirmasi
     private fun showAlertDialog(type: Int) {
         val isDialogClose = type == ALERT_DIALOG_CLOSE
         val dialogTitle: String

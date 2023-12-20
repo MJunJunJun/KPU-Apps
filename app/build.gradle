@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         // Konfigurasi dasar aplikasi seperti ID, versi SDK minimum dan target, dll.
-        applicationId 'com.serkomjuned.kpu' // Pastikan ID aplikasi konsisten di seluruh proyek
+        applicationId 'com.skripsi.kpu' // Pastikan ID aplikasi konsisten di seluruh proyek
         minSdk 21 // Versi SDK Android minimum yang didukung
         targetSdk 33 // Target SDK aplikasi
         versionCode 1
